@@ -363,6 +363,13 @@ struct GraphicsPipelineState
   VkPipelineColorBlendStateCreateInfo    colorBlendState{VK_STRUCTURE_TYPE_PIPELINE_COLOR_BLEND_STATE_CREATE_INFO};
   VkPipelineVertexInputStateCreateInfo   vertexInputState{VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO};
 
+#ifdef USE_TESS
+  VkPipelineTessellationStateCreateInfo tessellationState {
+    .sType = VK_STRUCTURE_TYPE_PIPELINE_TESSELLATION_STATE_CREATE_INFO,
+    .patchControlPoints = 3,
+  };
+#endif
+
 protected:
   std::vector<VkPipelineColorBlendAttachmentState> blendAttachmentStates{makePipelineColorBlendAttachmentState()};
   std::vector<VkDynamicState> dynamicStateEnables = {VK_DYNAMIC_STATE_VIEWPORT, VK_DYNAMIC_STATE_SCISSOR};
@@ -572,6 +579,12 @@ private:
 
   void init()
   {
+
+#ifdef USE_TESS
+    pipelineState.inputAssemblyState.topology = VK_PRIMITIVE_TOPOLOGY_PATCH_LIST;
+    createInfo.pTessellationState  = &pipelineState.tessellationState;
+#endif
+
     createInfo.pRasterizationState = &pipelineState.rasterizationState;
     createInfo.pInputAssemblyState = &pipelineState.inputAssemblyState;
     createInfo.pColorBlendState    = &pipelineState.colorBlendState;
