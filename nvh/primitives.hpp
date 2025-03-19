@@ -59,6 +59,9 @@ struct PrimitiveVertex
   glm::vec3 p;  // Position
   glm::vec3 n;  // Normal
   glm::vec2 t;  // Texture Coordinates
+
+  /// For pick unique vertex and compute indices
+  bool operator==(const PrimitiveVertex& other) const { return p == other.p && n == other.n && t == other.t; }
 };
 
 struct PrimitiveTriangle
